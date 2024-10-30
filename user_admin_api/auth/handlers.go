@@ -4,10 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gofrs/uuid"
+	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 	"trucode.app/user_admin_api/database"
@@ -58,6 +60,24 @@ func Login(c *gin.Context){
 
 	shared.Sessions[sessionToken] = session
 
-	c.SetCookie("session", sessionToken, 1 * 60, "/", "localhost", false, false)
-	c.JSON(http.StatusOK, gin.H{"session":sessionToken, "expires": time.Now().Add(1 * time.Minute).UnixMilli()})
+
+
+	claims := shared.Payload{
+		MapClaims: jwt.MapClaims{
+			"iat": jwt.NewNumericDate(time.Now()),
+			"eat": jwt.NewNumericDate(time.Now().Add(1 * time.Minute)),
+		},
+		Session: sessionToken,
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	signinKey := []byte(os.Getenv("JWT_SECRET_KEY"))
+
+	tokenString, err := token.SignedString(signinKey)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"token":tokenString})
 }
