@@ -19,7 +19,7 @@ async function signIn() {
     body: JSON.stringify(loginInputs)
   })
   const data = await response.json()
-  authStore.setSession(data.session, data.expires)
+  authStore.setSession(data.token)
 }
 </script>
 

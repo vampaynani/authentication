@@ -35,7 +35,7 @@ POST http://localhost:3333/auth/register
 Content-Type: application/json
 
 {
-  "username":"Wens3",
+  "username":"Wens",
   "password":"12345"
 }
 ###
@@ -43,6 +43,9 @@ POST http://localhost:3333/auth/login
 Content-Type: application/json
 
 {
-  "username":"Wens3",
+  "username":"Wens",
   "password":"12345"
 }
+###
+GET http://localhost:3333/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiZWF0IjoxNzMwMjc2NTM3LCJpYXQiOjE3MzAyNzY0Nzd9LCJzZXNzaW9uIjoiNzY2YzQwY2MtMTQ2MC01YjRmLThkYTMtYzkyMDA3NjFlMDczIn0.M8uc9HDcIEi-D_hoyNo43UxhMacTZtvcWME9NnaP2pk

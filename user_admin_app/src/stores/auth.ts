@@ -1,3 +1,5 @@
+import type { JWTPayload } from '@/types'
+import { jwtDecode } from 'jwt-decode'
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -15,15 +17,17 @@ export const useAuthStore = defineStore('auth', () => {
   // -> con el segundo bang pasa a false
 
   async function init() {
-    const cookie = await (window as any).cookieStore.get('session')
-    if (cookie) {
-      setSession(cookie.value, cookie.expires)
+    const token = sessionStorage.getItem('token')
+    if (token) {
+      setSession(token)
     }
   }
 
-  function setSession(sessionStr: string, expires: number) {
+  function setSession(tokenStr: string) {
+    const payload = jwtDecode(tokenStr) as JWTPayload
+
     const now = new Date()
-    const diff = expires - now.getTime()
+    const diff = payload.MapClaims.eat * 1000 - now.getTime()
 
     // If we want to ask for a session refresh
     // setTimeout(
@@ -33,7 +37,8 @@ export const useAuthStore = defineStore('auth', () => {
     //   diff - 30 * 1000
     // )
 
-    session.value = sessionStr
+    sessionStorage.setItem('token', tokenStr)
+    session.value = payload.session
     setTimeout(() => {
       clearSession()
     }, diff)
@@ -41,6 +46,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function clearSession() {
+    sessionStorage.removeItem('token')
     session.value = ''
     router.push('/')
   }

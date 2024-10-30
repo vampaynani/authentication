@@ -11,11 +11,12 @@ export async function apiCall(
   path: string,
   { method = 'GET', data, headers }: ApiCallOptions = {}
 ) {
+  const sessionToken = sessionStorage.getItem('token')
   const response = await fetch(BASE_URL + path, {
-    credentials: 'include',
     method,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: `Bearer ${sessionToken}`,
       ...headers
     },
     body: JSON.stringify(data)

@@ -5,3 +5,11 @@ export interface User {
   lastname: string
   email: string
 }
+
+export interface JWTPayload {
+  MapClaims: {
+    eat: number
+    iat: number
+  }
+  session: string
+}
