@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+
 const authStore = useAuthStore()
 
 const loginInputs = reactive({
@@ -18,7 +19,7 @@ async function signIn() {
     body: JSON.stringify(loginInputs)
   })
   const data = await response.json()
-  authStore.setSession(data.session, 'about')
+  authStore.setSession(data.session, data.expires)
 }
 </script>
 

@@ -1,0 +1,14 @@
+{
+  "folders": [
+	{
+		"path": "user_admin_api"
+	},
+	{
+		"path": "user_admin_app"
+	},
+	{
+		"path": "user_admin_tools"
+	}
+],
+  "settings": {}
+}

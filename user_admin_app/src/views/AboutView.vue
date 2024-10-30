@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive } from 'vue'
+import { useUsers } from '@/services/users'
 
-interface User {
-  id: number
-  username: string
-  firstname: string
-  lastname: string
-  email: string
-}
+const { loadUsers, deleteUser, createUser, users } = useUsers()
 
 const newUser = reactive({
   username: '',
@@ -16,40 +11,7 @@ const newUser = reactive({
   email: ''
 })
 
-const users = ref<User[]>([])
-
-async function loadUsers() {
-  const response = await fetch('http://localhost:3333/users', {
-    credentials: 'include'
-  })
-  const data = await response.json()
-  users.value = data as User[]
-}
-
-async function createUser() {
-  const response = await fetch('http://localhost:3333/users', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(newUser)
-  })
-  const data = await response.json()
-  users.value = [...users.value, data]
-}
-
-async function deleteUser(id: number) {
-  const response = await fetch(`http://localhost:3333/users/${id}`, {
-    method: 'DELETE'
-  })
-  if (response.ok) {
-    users.value = users.value.filter((user) => user.id !== id)
-  }
-}
-
-onMounted(() => {
-  loadUsers()
-})
+onMounted(loadUsers)
 </script>
 <template>
   <section>
@@ -61,7 +23,7 @@ onMounted(() => {
       </li>
     </ul>
     <h2>Add User</h2>
-    <form @submit.prevent="createUser">
+    <form @submit.prevent="() => createUser(newUser)">
       <input v-model="newUser.username" type="text" placeholder="Username" />
       <input v-model="newUser.firstname" type="text" placeholder="Firstname" />
       <input v-model="newUser.lastname" type="text" placeholder="Lastname" />

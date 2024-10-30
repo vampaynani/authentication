@@ -16,14 +16,13 @@ func GetAllUsers(c *gin.Context){
 }
 
 func GetUserById(c *gin.Context){
-	var foundUser models.User
 	dbConn := database.CreateDbConnection()
+	var foundUser models.User
 	tx := dbConn.Where("id=?", c.Param("id")).Find(&foundUser)
 	if tx.Error != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
 		return
 	}
-
 	c.JSON(http.StatusOK, foundUser)
 }
 

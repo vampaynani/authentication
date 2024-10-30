@@ -3,8 +3,8 @@ import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 export const useAuthStore = defineStore('auth', () => {
-  const session = ref('')
   const router = useRouter()
+  const session = ref('')
 
   const isLoggedIn = computed(() => !!session.value)
   //session.value -> string = "12345..." -> truthy
@@ -17,18 +17,33 @@ export const useAuthStore = defineStore('auth', () => {
   async function init() {
     const cookie = await (window as any).cookieStore.get('session')
     if (cookie) {
-      setSession(cookie.value, 'about')
+      setSession(cookie.value, cookie.expires)
     }
   }
 
-  function setSession(sessionStr: string, goTo: string) {
+  function setSession(sessionStr: string, expires: number) {
+    const now = new Date()
+    const diff = expires - now.getTime()
+
+    // If we want to ask for a session refresh
+    // setTimeout(
+    //   () => {
+    //     confirm('Session almost finished')
+    //   },
+    //   diff - 30 * 1000
+    // )
+
     session.value = sessionStr
-    if (goTo) router.push({ name: goTo })
+    setTimeout(() => {
+      clearSession()
+    }, diff)
+    router.push('/about')
   }
 
   function clearSession() {
     session.value = ''
+    router.push('/')
   }
 
-  return { init, isLoggedIn, clearSession, setSession }
+  return { isLoggedIn, init, clearSession, setSession }
 })

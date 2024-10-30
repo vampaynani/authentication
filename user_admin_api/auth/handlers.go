@@ -49,7 +49,7 @@ func Login(c *gin.Context){
 		return
 	}
 
-	sessionToken := uuid.NewV5(uuid.UUID{}, "session").String()
+	sessionToken := uuid.NewV5(uuid.UUID{}, user.Username).String()
 
 	session := shared.Session{
 		Uid: user.ID,
@@ -59,5 +59,5 @@ func Login(c *gin.Context){
 	shared.Sessions[sessionToken] = session
 
 	c.SetCookie("session", sessionToken, 1 * 60, "/", "localhost", false, false)
-	c.JSON(http.StatusOK, gin.H{"session":sessionToken})
+	c.JSON(http.StatusOK, gin.H{"session":sessionToken, "expires": time.Now().Add(1 * time.Minute).UnixMilli()})
 }

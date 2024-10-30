@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
+import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -16,7 +16,7 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('@/views/AboutView.vue'),
+      component: () => import('../views/AboutView.vue'),
       meta: { requiresAuth: true }
     }
   ]
@@ -24,7 +24,6 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore()
-  console.log(to, from, authStore.isLoggedIn)
   if (to.name === 'home' && authStore.isLoggedIn) {
     next({ name: 'about' })
   } else if (to.meta.requiresAuth && !authStore.isLoggedIn) {

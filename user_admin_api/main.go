@@ -21,9 +21,9 @@ func main() {
 	dbConn.AutoMigrate(&models.User{})
 
 	router := gin.Default()
-	router.Use(shared.SetCors())
-	auth.AddAuthRoutes(router)
+	router.Use(shared.Cors())
 	users.AddUserRoutes(router)
+	auth.AddAuthRoutes(router)
 
 	router.Run(":3333")
 }
