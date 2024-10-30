@@ -1,0 +1,47 @@
+GET http://localhost:3333/users
+###
+GET http://localhost:3333/users/me
+###
+POST http://localhost:3333/users
+Content-Type: application/json
+
+{
+  "username":"Test",
+  "first_name":"Test",
+  "last_name":"Test",
+  "email":"test@mail.com"
+}
+
+###
+PUT http://localhost:3333/users/1
+Content-Type: application/json
+
+{
+  "username":"Test",
+  "first_name":"Test1",
+  "last_name":"Test1",
+  "email":"test@mail.com"
+}
+###
+PATCH http://localhost:3333/users/1
+Content-Type: application/json
+
+{
+  "username":"Test"
+}
+###
+POST http://localhost:3333/auth/register
+Content-Type: application/json
+
+{
+  "username":"Wens5",
+  "password":"12345"
+}
+###
+POST http://localhost:3333/auth/login
+Content-Type: application/json
+
+{
+  "username":"Wens5",
+  "password":"12345"
+}
